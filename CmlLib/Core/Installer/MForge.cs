@@ -15,7 +15,7 @@ namespace CmlLib.Core.Installer
 {
     public class MForge
     {
-        private const string MavenServer = "https://files.minecraftforge.net/maven/net/minecraftforge/forge/";
+        public string MavenServer = "https://files.minecraftforge.net/maven/net/minecraftforge/forge/";
 
         public static string GetOldForgeName(string mcVersion, string forgeVersion)
         {
@@ -142,15 +142,17 @@ namespace CmlLib.Core.Installer
 
             if (installProfile == null)
                 throw new InvalidOperationException("no install_profile.json in installer");
-            if (versionsJson == null)
-                throw new InvalidOperationException("no version.json in installer");
             
             JToken profileObj;
             var installObj = JObject.Parse(installProfile); // installer info
             var versionInfo = installObj["versionInfo"]; // version profile
-
+            //FIX BUG versionJson非必须存在
             if (versionInfo == null)
-                profileObj = JObject.Parse(versionsJson);
+            {
+                if (versionsJson == null)
+                    throw new InvalidOperationException("no version.json in installer");
+                                profileObj = JObject.Parse(versionsJson);
+            }
             else
             {
                 installObj = installObj["install"] as JObject;
