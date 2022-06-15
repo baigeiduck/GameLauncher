@@ -117,14 +117,14 @@ namespace CmlLib.Core
                 args.AddRange(launchOption.JVMArguments);
             else
             {
-                if (launchOption.MaximumRamMb > 0)
-                    args.Add("-Xmx" + launchOption.MaximumRamMb + "m");
-
-                if (launchOption.MinimumRamMb > 0)
-                    args.Add("-Xms" + launchOption.MinimumRamMb + "m");
-                
                 args.AddRange(DefaultJavaParameter);
             }
+
+            if (launchOption.MaximumRamMb > 0)
+                args.Add("-Xmx" + launchOption.MaximumRamMb + "m");
+
+            if (launchOption.MinimumRamMb > 0)
+                args.Add("-Xms" + launchOption.MinimumRamMb + "m");
 
             if (version.JvmArguments == null)
             {
