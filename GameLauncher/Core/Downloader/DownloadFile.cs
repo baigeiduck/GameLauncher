@@ -10,11 +10,11 @@ namespace CmlLib.Core.Downloader
             this.Path = path;
             this.Url = url;
         }
-        
+
         public MFile Type { get; set; }
         public string? Name { get; set; }
         public string Path { get; private set; }
-        public string Url { get; private set; }
+        public string Url { get; set; }
         public long Size { get; set; }
 
         public Func<Task>[]? AfterDownload { get; set; }

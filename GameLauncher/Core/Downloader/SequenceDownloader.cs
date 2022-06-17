@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
+using TLSP.GameLauncher.Core.Downloader;
 
 namespace CmlLib.Core.Downloader
 {
@@ -30,31 +31,40 @@ namespace CmlLib.Core.Downloader
             {
                 DownloadFile file = files[i];
 
-                try
+                string[] urls = DownloadCDN.AppleCDN(file.Url);
+                Exception exception = null;
+                foreach (string url in urls)
                 {
-                    var directoryPath = Path.GetDirectoryName(file.Path);
-                    if (!string.IsNullOrEmpty(directoryPath))
-                        Directory.CreateDirectory(directoryPath);
-                    
-                    await downloader.DownloadFileAsync(file).ConfigureAwait(false);
-
-                    if (file.AfterDownload != null)
+                    try
                     {
-                        foreach (var item in file.AfterDownload)
-                        {
-                            await item().ConfigureAwait(false);
-                        }
-                    }
-                    
-                    fileProgress?.Report(
-                        new DownloadFileChangedEventArgs(file.Type, this, file.Name, files.Length, i));
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine(ex.ToString());
+                        var directoryPath = Path.GetDirectoryName(file.Path);
+                        if (!string.IsNullOrEmpty(directoryPath))
+                            Directory.CreateDirectory(directoryPath);
 
+                        await downloader.DownloadFileAsync(file).ConfigureAwait(false);
+
+                        if (file.AfterDownload != null)
+                        {
+                            foreach (var item in file.AfterDownload)
+                            {
+                                await item().ConfigureAwait(false);
+                            }
+                        }
+
+                        fileProgress?.Report(
+                            new DownloadFileChangedEventArgs(file.Type, this, file.Name, files.Length, i));
+
+                        exception = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        exception = ex;
+                    }
+                }
+                if (exception != null)
+                {
                     if (!IgnoreInvalidFiles)
-                        throw new MDownloadFileException(ex.Message, ex, files[i]);
+                        throw new MDownloadFileException(exception.Message, exception, files[i]);
                 }
             }
         }

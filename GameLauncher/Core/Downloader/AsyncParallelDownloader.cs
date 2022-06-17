@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using TLSP.GameLauncher.Core.Downloader;
 
 namespace CmlLib.Core.Downloader
 {
@@ -96,17 +97,31 @@ namespace CmlLib.Core.Downloader
             await Task.WhenAll(tasks).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// 启动下载任务
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        /// <exception cref="MDownloadFileException"></exception>
         private async Task doDownload(DownloadFile file)
         {
-            try
+            string[] urls = DownloadCDN.AppleCDN(file.Url);
+            Exception exception = null;
+            foreach(string url in urls)
             {
-                await doDownload(file, 3).ConfigureAwait(false);
+                try
+                {
+                    file.Url = url;
+                    await doDownload(file, 2).ConfigureAwait(false);
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    exception = ex;
+                }
             }
-            catch (Exception ex)
-            {
-                if (!IgnoreInvalidFiles)
-                    throw new MDownloadFileException("failed to download", ex, file);
-            }
+            if (!IgnoreInvalidFiles)
+                throw new MDownloadFileException("failed to download", exception, file);
         }
 
         private async Task doDownload(DownloadFile file, int retry)

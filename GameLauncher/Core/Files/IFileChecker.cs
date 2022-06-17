@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+
 using CmlLib.Core.Downloader;
 using CmlLib.Core.Version;
-using System.Threading.Tasks;
 
 namespace CmlLib.Core.Files
 {
