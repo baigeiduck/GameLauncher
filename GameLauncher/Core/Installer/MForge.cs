@@ -59,15 +59,17 @@ namespace CmlLib.Core.Installer
             // copy forge libraries to minecraft
             extractMaven(installerPath); // new installer
 
-            var universalPath = installerObj["filePath"]?.ToString();
-            if (string.IsNullOrEmpty(universalPath))
-                throw new InvalidOperationException("filePath property in installer was null");
-            
             var destPath = installerObj["path"]?.ToString();
             if (string.IsNullOrEmpty(destPath))
                 throw new InvalidOperationException("path property in installer was null");
-            
-            extractUniversal(installerPath, universalPath, destPath); // old installer
+
+            var universalPath = installerObj["filePath"]?.ToString();
+            if (string.IsNullOrEmpty(universalPath))
+            {
+                //新版本取消了filePath项 手动拼接路径,文件若不存在则不走此安装模式
+                universalPath = $"forge-{mcVersion}-{forgeVersion}-universal.jar";
+                extractUniversal(installerPath, universalPath, destPath); // old installer
+            }
 
             // download libraries and processors
             checkLibraries(installerObj["libraries"] as JArray);
