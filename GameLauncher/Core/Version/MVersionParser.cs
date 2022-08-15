@@ -40,7 +40,18 @@ namespace CmlLib.Core.Version
                     version.AssetHash = assetindex["sha1"]?.ToString();
                 }
                 else if (assets != null)
+                {
                     version.AssetId = assets.ToString();
+                }
+                else
+                {
+                    if (id.StartsWith("1.12"))
+                    {
+                        version.AssetId = "1.12";
+                        version.AssetHash = "1584b57c1a0b5e593fad1f5b8f78536ca640547b";
+                        version.AssetUrl = "https://launchermeta.mojang.com/v1/packages/1584b57c1a0b5e593fad1f5b8f78536ca640547b/1.12.json";
+                    }
+                }
 
                 // client jar
                 var client = job["downloads"]?["client"];

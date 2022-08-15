@@ -1,5 +1,6 @@
 ﻿using CmlLib.Core.Downloader;
 using CmlLib.Core.Files;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CmlLib.Core.Version
@@ -81,8 +82,9 @@ namespace CmlLib.Core.Version
             if (parentVersion.Libraries != null)
             {
                 if (Libraries != null)
+                {
                     Libraries = Libraries.Concat(parentVersion.Libraries).ToArray();
-                    //Libraries = parentVersion.Libraries.Concat(Libraries).ToArray();
+                }
                 else
                     Libraries = parentVersion.Libraries;
             }

@@ -112,7 +112,7 @@ namespace CmlLib.Core.Downloader
                 try
                 {
                     file.Url = url;
-                    await doDownload(file, 2).ConfigureAwait(false);
+                    await doDownload(file, 1).ConfigureAwait(false);
                     return;
                 }
                 catch (Exception ex)

@@ -38,10 +38,18 @@ namespace CmlLib.Core
         {
             string arg = string.Join(" ", CreateArg());
             Process mc = new Process();
-            mc.StartInfo.FileName = 
-                useNotNull(launchOption.GetStartVersion().JavaBinaryPath, launchOption.GetJavaPath()) ?? "";
-            mc.StartInfo.Arguments = arg;
-            mc.StartInfo.WorkingDirectory = minecraftPath.BasePath;
+            ProcessStartInfo info = new ProcessStartInfo
+            {
+                FileName = useNotNull(launchOption.GetStartVersion().JavaBinaryPath, launchOption.GetJavaPath()) ?? "",
+                Arguments = arg,
+                WorkingDirectory = minecraftPath.BasePath,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = false,
+                StandardOutputEncoding = System.Text.Encoding.UTF8
+            };
+
+            mc.StartInfo = info;
 
             return mc;
         }

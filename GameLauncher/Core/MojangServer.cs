@@ -2,7 +2,7 @@
 {
     public static class MojangServer
     {
-        public static readonly string
+        public static string
             Auth             = "https://authserver.mojang.com/",
             Version          = "https://launchermeta.mojang.com/mc/game/version_manifest.json",
             Library          = "https://libraries.minecraft.net/",

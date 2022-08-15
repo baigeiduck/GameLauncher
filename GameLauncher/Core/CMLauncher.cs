@@ -170,6 +170,24 @@ namespace CmlLib.Core
             }
         }
 
+        public async Task CheckAssetAndDownloadAsync(MVersion version)
+        {
+            foreach (var checker in this.GameFileCheckers)
+            {
+                if (!(checker is AssetChecker) && !(checker is JavaChecker)){
+                    continue;
+                }
+
+                DownloadFile[]? files = await checker.CheckFilesTaskAsync(MinecraftPath, version, pFileChanged)
+                    .ConfigureAwait(false);
+
+                if (files == null || files.Length == 0)
+                    continue;
+
+                await DownloadGameFiles(files).ConfigureAwait(false);
+            }
+        }
+
         public async Task CheckAndDownloadAsync(MVersion version)
         {
             foreach (var checker in this.GameFileCheckers)
@@ -217,6 +235,13 @@ namespace CmlLib.Core
             return await CreateProcessAsync(version, option, checkAndDownload).ConfigureAwait(false);
         }
 
+        public async Task<Process> CreateProcessAssetAsync(string versionName, MLaunchOption option,
+            bool checkAndDownload = true)
+        {
+            var version = await GetVersionAsync(versionName).ConfigureAwait(false);
+            return await CreateProcessAssetCheckAsync(version, option, checkAndDownload).ConfigureAwait(false);
+        }
+
         public async Task<Process> CreateProcessAsync(MVersion version, MLaunchOption option, 
             bool checkAndDownload=true)
         {
@@ -227,7 +252,18 @@ namespace CmlLib.Core
             
             return await CreateProcessAsync(option).ConfigureAwait(false);
         }
-        
+
+        public async Task<Process> CreateProcessAssetCheckAsync(MVersion version, MLaunchOption option,
+            bool checkAndDownload = true)
+        {
+            option.StartVersion = version;
+
+            if (checkAndDownload)
+                await CheckAssetAndDownloadAsync(option.StartVersion).ConfigureAwait(false);
+
+            return await CreateProcessAsync(option).ConfigureAwait(false);
+        }
+
         public Process CreateProcess(MLaunchOption option)
         {
             checkLaunchOption(option);

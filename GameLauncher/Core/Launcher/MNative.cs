@@ -26,14 +26,21 @@ namespace CmlLib.Core
             foreach (var item in version.Libraries)
             {
                 // do not ignore exception
-                if (item.IsRequire && item.IsNative && !string.IsNullOrEmpty(item.Path))
+                try
                 {
-                    string zPath = Path.Combine(gamePath.Library, item.Path);
-                    if (File.Exists(zPath))
+                    if (item.IsRequire && item.IsNative && !string.IsNullOrEmpty(item.Path))
                     {
-                        var z = new SharpZip(zPath);
-                        z.Unzip(path);
+                        string zPath = Path.Combine(gamePath.Library, item.Path);
+                        if (File.Exists(zPath))
+                        {
+                            var z = new SharpZip(zPath);
+                            z.Unzip(path);
+                        }
                     }
+                }
+                catch
+                {
+
                 }
             }
 

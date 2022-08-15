@@ -37,6 +37,8 @@ namespace CmlLib.Core.Downloader
                 {
                     try
                     {
+                        file.Url = url;
+
                         var directoryPath = Path.GetDirectoryName(file.Path);
                         if (!string.IsNullOrEmpty(directoryPath))
                             Directory.CreateDirectory(directoryPath);
@@ -55,6 +57,7 @@ namespace CmlLib.Core.Downloader
                             new DownloadFileChangedEventArgs(file.Type, this, file.Name, files.Length, i));
 
                         exception = null;
+                        break;
                     }
                     catch (Exception ex)
                     {

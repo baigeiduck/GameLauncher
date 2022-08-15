@@ -100,11 +100,23 @@ namespace CmlLib.Core.Version
 
             if (startVersion.IsInherited && !string.IsNullOrEmpty(startVersion.ParentVersionId))
             {
+                //别装了小黑子，就是你 （网易的jar采用forge与原版jar同目录策略 自己即是原版本）
+                if (versionMetadata.Name == startVersion.ParentVersionId)
+                {
+                    return startVersion;
+                }
+
                 if (startVersion.ParentVersionId == startVersion.Id) // prevent StackOverFlowException
                     throw new InvalidDataException(
                         "Invalid version json file : inheritFrom property is equal to id property.");
 
                 var baseVersion = GetVersion(startVersion.ParentVersionId);
+                //启动它自己
+                if (baseVersion.Id == versionMetadata.Name)
+                {
+                    return baseVersion;
+                }
+
                 startVersion.InheritFrom(baseVersion);
             }
 
@@ -126,12 +138,19 @@ namespace CmlLib.Core.Version
 
             if (startVersion.IsInherited && !string.IsNullOrEmpty(startVersion.ParentVersionId))
             {
+                //别装了小黑子，就是你 （网易的jar采用forge与原版jar同目录策略 自己即是原版本）
+                if (versionMetadata.Name == startVersion.ParentVersionId)
+                {
+                    return startVersion;
+                }
+
                 if (startVersion.ParentVersionId == startVersion.Id) // prevent StackOverFlowException
                     throw new InvalidDataException(
                         "Invalid version json file : inheritFrom property is equal to id property.");
 
                 var baseVersion = await GetVersionAsync(startVersion.ParentVersionId)
                     .ConfigureAwait(false);
+
                 startVersion.InheritFrom(baseVersion);
             }
             

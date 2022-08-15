@@ -1,6 +1,7 @@
 ﻿using CmlLib.Core.Auth;
 using CmlLib.Core.Version;
 using System;
+using System.Collections.Generic;
 
 namespace CmlLib.Core
 {
@@ -14,7 +15,7 @@ namespace CmlLib.Core
         public string? JavaPath { get; set; }
         public int MaximumRamMb { get; set; } = 1024;
         public int MinimumRamMb { get; set; }
-        public string[]? JVMArguments { get; set; }
+        public List<string>? JVMArguments { get; set; }
 
         public string? DockName { get; set; }
         public string? DockIcon { get; set; }

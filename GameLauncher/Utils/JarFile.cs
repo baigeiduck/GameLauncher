@@ -59,7 +59,7 @@ namespace CmlLib.Utils
             return dict;
         }
 
-        private static string readStreamString(Stream s)
+        protected static string readStreamString(Stream s)
         {
             var str = new StringBuilder();
             var buffer = new byte[1024];

@@ -130,11 +130,15 @@ namespace CmlLib.Core.Files
             if (string.IsNullOrEmpty(manifestUrl))
                 return null;
 
+            manifestUrl = manifestUrl.Replace("launchermeta.mojang.com", "bmclapi2.bangbang93.com");
+
             string response;
             using (var wc = new WebClient())
             {
                 response = wc.DownloadString(manifestUrl); // ex
             }
+
+            response = response.Replace("launcher.mojang.com", "bmclapi2.bangbang93.com");
 
             return JObject.Parse(response); // ex
         }
